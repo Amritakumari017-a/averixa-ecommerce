@@ -1,0 +1,24 @@
+{% extends "shop/base.html" %}
+{% block title %}Shop all — Averixa Commerce{% endblock %}
+{% block content %}
+<section class="page-intro">
+  <p class="eyebrow">THE FULL COLLECTION</p><h1>Find your <em>everyday.</em></h1>
+  <p>Useful objects and thoughtful essentials, all in one place.</p>
+</section>
+<section class="section catalog-section">
+  <form class="catalog-toolbar" method="get">
+    <div class="catalog-count"><strong>{{ products|length }}</strong> products <span>·</span> Find your next favourite</div>
+    <div class="catalog-controls">
+      <label>Category <select name="category" onchange="this.form.submit()"><option value="">All categories</option>{% for category in categories %}<option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>{% endfor %}</select></label>
+      <label>Sort by <select name="sort" onchange="this.form.submit()"><option value="featured" {% if selected_sort == "featured" %}selected{% endif %}>Featured</option><option value="newest" {% if selected_sort == "newest" %}selected{% endif %}>Newest</option><option value="price_asc" {% if selected_sort == "price_asc" %}selected{% endif %}>Price: low to high</option><option value="price_desc" {% if selected_sort == "price_desc" %}selected{% endif %}>Price: high to low</option></select></label>
+      {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+    </div>
+  </form>
+  {% if query %}<p class="search-result-note">Results for <strong>“{{ query }}”</strong> · <a href="{% url 'product_list' %}">Clear search</a></p>{% endif %}
+  <div class="product-grid catalog-grid">
+    {% for product in products %}{% include "shop/_product_card.html" with product=product %}{% empty %}
+      <div class="empty-state"><h3>No products found.</h3><p>Try another search or category, or add products from Django Admin.</p><a class="button button-dark" href="{% url 'product_list' %}">Clear filters</a></div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
